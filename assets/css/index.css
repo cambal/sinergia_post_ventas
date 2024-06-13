@@ -1,0 +1,312 @@
+*::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #aaa;
+}
+
+/* preload */
+.container-preloader-dot-loading {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    z-index: 100000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.preloader-dot-loading {
+    display: block;
+    margin: 0px auto;
+    width: 97px;
+}
+
+.preloader-dot-loading .cssload-loading i {
+    width: 19px;
+    height: 19px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #2a2b26;
+}
+
+.preloader-dot-loading .cssload-loading i:first-child {
+    opacity: 0;
+    animation: cssload-loading-ani2 0.58s linear infinite;
+    -o-animation: cssload-loading-ani2 0.58s linear infinite;
+    -ms-animation: cssload-loading-ani2 0.58s linear infinite;
+    -webkit-animation: cssload-loading-ani2 0.58s linear infinite;
+    -moz-animation: cssload-loading-ani2 0.58s linear infinite;
+    transform: translate(-19px);
+    -o-transform: translate(-19px);
+    -ms-transform: translate(-19px);
+    -webkit-transform: translate(-19px);
+    -moz-transform: translate(-19px);
+}
+
+.preloader-dot-loading .cssload-loading i:nth-child(2),
+.preloader-dot-loading .cssload-loading i:nth-child(3) {
+    animation: cssload-loading-ani3 0.58s linear infinite;
+    -o-animation: cssload-loading-ani3 0.58s linear infinite;
+    -ms-animation: cssload-loading-ani3 0.58s linear infinite;
+    -webkit-animation: cssload-loading-ani3 0.58s linear infinite;
+    -moz-animation: cssload-loading-ani3 0.58s linear infinite;
+}
+
+.preloader-dot-loading .cssload-loading i:last-child {
+    animation: cssload-loading-ani1 0.58s linear infinite;
+    -o-animation: cssload-loading-ani1 0.58s linear infinite;
+    -ms-animation: cssload-loading-ani1 0.58s linear infinite;
+    -webkit-animation: cssload-loading-ani1 0.58s linear infinite;
+    -moz-animation: cssload-loading-ani1 0.58s linear infinite;
+}
+
+@keyframes cssload-loading-ani1 {
+    100% {
+        transform: translate(39px);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes cssload-loading-ani1 {
+    100% {
+        -webkit-transform: translate(39px);
+        opacity: 0;
+    }
+}
+
+@keyframes cssload-loading-ani2 {
+    100% {
+        transform: translate(19px);
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes cssload-loading-ani2 {
+    100% {
+        -webkit-transform: translate(19px);
+        opacity: 1;
+    }
+}
+
+@keyframes cssload-loading-ani3 {
+    100% {
+        transform: translate(19px);
+    }
+}
+
+@-webkit-keyframes cssload-loading-ani3 {
+    100% {
+        -webkit-transform: translate(19px);
+    }
+}
+
+tfoot,
+thead {
+    background-color: #212529;
+    color: #fff;
+}
+
+th,
+td {
+    border-right: solid 1px #fff !important;
+    position: relative;
+}
+
+.close {
+    background: transparent;
+    border: none;
+}
+
+.alert {
+    color: #fff !important;
+}
+
+.alert .close {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+}
+
+.close span {
+    font-size: 1.5rem;
+}
+
+.dropdown-menu i {
+    font-size: 10px;
+}
+
+aside .navbar-nav {
+    overflow-y: scroll;
+    max-height: 87vh;
+}
+
+.select-2 {
+    background: transparent !important;
+    border: none !important;
+    width: 6rem !important;
+    position: relative;
+    top: -9px;
+    right: 7px;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    color: red !important;
+}
+
+.presentacion_compra2 {
+    color: red !important;
+}
+
+.form-group,
+.form-control {
+    text-transform: uppercase;
+}
+
+.ps--active-x>.ps__rail-x,
+.ps--active-y>.ps__rail-y {
+    display: none !important;
+}
+
+#laboratorio_compra_select,
+#tipo_compra_select,
+#presentacion_compra_select,
+#btn_agregar {
+    display: none;
+}
+
+.form_hide_2 {
+    display: none;
+}
+
+.update {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+}
+
+/* range */
+input[name="numero"] {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+input[type="range"] {
+    cursor: pointer;
+    width: 100%;
+    border-radius: 1em;
+    background: #99999973;
+    /* background-image: linear-gradient(90deg, #384bdc, #384bdc, #33994a, #df3b33); */
+    box-shadow: inset 0 0 0.05em rgba(0, 0, 0, 0.6);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    position: relative;
+    width: 2.3em;
+    height: 10px;
+    border-radius: 0.08em;
+    background-color: #999999;
+    /* background-image: radial-gradient(#eee, #ccc); */
+    filter: drop-shadow(0.02em 0.02em 0.02em rgba(0, 0, 0, 0.5));
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#numero-value,
+#numero-value-2,
+#numero-value-3,
+#numero-value-hum,
+#numero-value-hum-2,
+#numero-value-hum-3 {
+    width: 100%;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.form-temp .row {
+    margin-top: -.5rem;
+}
+
+.form-temp .col-1 {
+    font-size: .7rem;
+}
+
+.margin_left_0 {
+    margin-left: 0 !important;
+}
+
+#btn_sidenav {
+    cursor: pointer;
+    /* position: relative; */
+    /* left: -7px; */
+    /* top: 8px; */
+}
+
+/* #marcas{
+    display: block;
+} */
+
+.ui-widget-content {
+    text-transform: uppercase !important;
+    font-size: 13px !important;
+}
+
+@media (min-width: 1280px) {
+    .form-control {
+        font-size: 10px !important;
+    }
+
+    .form-group label {
+        font-size: 12px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container-preloader-dot-loading {
+        margin-left: 17.125rem;
+    }
+
+    .preloader-dot-loading {
+        position: relative;
+        right: 9rem;
+    }
+}
+
+@media (max-width: 1200px) {
+
+    #btn_sidenav {
+        display: none;
+    }
+}
+
+@media(max-width: 576px) {
+    .container-fluid {
+        padding: 10px !important;
+    }
+
+    aside .navbar-nav {
+        max-height: 78vh;
+    }
+}
