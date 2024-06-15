@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $('#preload').fadeOut(1000);
-    listarCompra();
+    // listarCompra();
+    calcularCompra();
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -91,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             timer: 2000
                         })
                     }
-                    response(data);
+                    // response(data);
                 }
             }).fail(function (e) {
                 console.log('Error!!' + JSON.stringify(e));
@@ -156,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $("#precio_venta").val(formatterPeso.format(ui.item.precio_venta));
             $("#existencia_venta").val(ui.item.existencia);
             $("#precioFormat").val(formatterPeso.format(ui.item.precio));
-            $("#cantidad").focus();
+            $("#lote_venta").focus();
             consultarLote(ui.item.id, 'lote_venta');
         }
     });
@@ -372,7 +373,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     var option = new Option(element.label, element.lote, false, false);
                     $('#' + lote).append(option).trigger('change');
                 }
-            }
+                $("#lote_venta").focus();
+            },
         }).fail(function (e) {
             console.log('Error!!' + JSON.stringify(e));
         })
@@ -616,8 +618,8 @@ Metodo de pago:
         }
         var rows = $('#tblDetalleCompra tr').length;
         if (rows > 2) {
-            var filas = document.querySelectorAll("#tblDetalleCompra tfoot tr td");
-            let numFormat = filas[9].textContent;
+            // var filas = document.querySelectorAll("#tblDetalleCompra tfoot tr td");
+            let numFormat = $("#total_pagar").val();
 
             var action = 'procesarCompra';
             if (numFormat != formatterPeso.format(total_fac_compra)) {
@@ -773,7 +775,8 @@ Metodo de pago:
         listar();
     }
     if (document.getElementById("detalle_compra")) {
-        listarCompra();
+        // listarCompra();
+        calcularCompra();
     }
     if (document.querySelector("#download_xlsx")) {
         let download_xlsx = document.querySelector("#download_xlsx")
@@ -987,9 +990,9 @@ function entradaAdmin(e) {
                     showConfirmButton: false,
                     timer: 2000
                 });
-                $('#form_producto_lote')[0].reset();
-                $("#entrada_admin").focus();
-                // location.reload();
+                // $('#form_producto_lote')[0].reset();
+                // $("#entrada_admin").focus();
+                location.reload();
             }
 
         }, error(e) {
@@ -1354,9 +1357,7 @@ function devolucion_venta(id, cantidad) {
         denyButtonText: `Cancelar`,
         confirmButtonText: 'Confirmar',
     }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-            let devolucion = 'devolucion';
             $.ajax({
                 url: "ajax.php",
                 type: 'GET',
@@ -1364,7 +1365,7 @@ function devolucion_venta(id, cantidad) {
                 data: {
                     id: id,
                     cantidad: cantidad,
-                    devolucion: devolucion
+                    devolucion: 'devolucion'
                 },
                 success: function (response) {
                     console.log(response);
@@ -1387,7 +1388,9 @@ function devolucion_venta(id, cantidad) {
                         });
                         location.reload();
                     }
-                }, error(e) { console.log(e); }
+                }
+            }).fail(function (e) {
+                console.log('Error!!' + JSON.stringify(e));
             });
         }
     });
@@ -1920,8 +1923,10 @@ function actualizarCantidadVenta(id, count) {
 }
 function actualizarCantidad(id, count) {
     const nueva_cantidad = parseInt($(".nueva_cantidad" + count + "").val());
-    const nuevo_total = parseInt($(".nuevo_total" + count + "").val().replace(/[$,]/g, ''));
-    const nuevo_precio_compra = parseInt($(".nuevo_precio_compra" + count + "").val().replace(/[$,]/g, ''));
+    // const nuevo_total = parseInt($(".nuevo_total1").val().replace(/[$,]/g, ''));
+    const nuevo_total = parseInt($(".nuevo_total" + count + "").val());
+    const nuevo_precio_compra = parseInt($(".nuevo_precio_compra" + count + "").val());
+    console.log(nuevo_total);
     // array campos obligatorios
     let arrayData = [
         nueva_cantidad, nuevo_total
@@ -1979,7 +1984,8 @@ function actualizarCantidad(id, count) {
 
 }
 function actualizarTotal(id, count) {
-    const nuevo_total = parseInt($(".nuevo_total" + count + "").val().replace(/[$,]/g, ''));
+    // const nuevo_total = parseInt($(".nuevo_total" + count + "").val().replace(/[$,]/g, ''));
+    const nuevo_total = parseInt($(".nuevo_total" + count + "").val());
     // array campos obligatorios
     let arrayData = [
         nuevo_total
@@ -2429,28 +2435,22 @@ function calcular() {
 }
 function calcularCompra() {
     // obtenemos todas las filas del tbody
-    // var filas = document.querySelectorAll(".total");
-    var filas = document.querySelectorAll("#tblDetalleCompra tbody tr");
-    console.log(filas);
-    // const elementos = document.querySelectorAll("[data-guardar]");
-    // elementos.forEach(elemento => {
-    //     console.log(elemento.dataset);
+    // var filas = document.querySelectorAll("#tblDetalleCompra tbody tr td");
+    // var total = 0;
+    // // recorremos cada una de las filas
+    // console.log(filas);
+    // filas.forEach(function (e) {
+    //     console.log(e);
+    //     // obtenemos las columnas de cada fila
+    //     var columnas = e.querySelectorAll("td");
+    //     // obtenemos los valores de la cantidad y importe
+    //     var importe = parseFloat(columnas[9].textContent);
+    //     console.log(importe);
+    //     total += importe;
     // });
-    // console.log(valor);
-    var total = 0;
-    // recorremos cada una de las filas
-    console.log(filas);
-    filas.forEach(function (e) {
-        // obtenemos las columnas de cada fila
-        var columnas = e.querySelectorAll("td");
-        // obtenemos los valores de la cantidad y importe
-        var importe = parseFloat(columnas[9].textContent);
-        console.log(importe);
-        total += importe;
-    });
-    // mostramos la suma total
-    var filas = document.querySelectorAll("#tblDetalleCompra tfoot tr td");
-    filas[9].textContent = formatterPeso.format(total.toFixed(2));
+    // // mostramos la suma total
+    // var filas = document.querySelectorAll("#tblDetalleCompra tfoot tr td");
+    // filas[9].textContent = formatterPeso.format(total.toFixed(2));
 }
 function generarPDF(cliente, id_venta) {
     url = 'pdf/generar.php?cl=' + cliente + '&v=' + id_venta;
@@ -2852,6 +2852,7 @@ function editarProducto(id) {
             $('#cant_global').val(datos.cant_global);
             $('#precio_compra').val(formatterPeso.format(datos.precio_compra));
             $('#invima').val(datos.invima);
+            $('#existencia_minima').val(datos.existencia_minima);
             $('#precio').val(formatterPeso.format(datos.precio_global));
             $('#precio_menudeo').val(formatterPeso.format(datos.precio_menudeo));
             $('#precio_blister').val(formatterPeso.format(datos.precio_blister));

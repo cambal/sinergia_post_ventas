@@ -201,19 +201,27 @@ else if (isset($_GET['detalle'])) {
     // variable
     $id_venta = $datosConsulta['id_venta'];
     $id_producto = $datosConsulta['id_producto'];
+    $lote = $datosConsulta['lote'];
+    $vencimiento = $datosConsulta['vencimiento'];
+    $multiplicacion = ($datosConsulta['cantidad'] * $datosConsulta['cant_unidad']);
     // eliminar
     $query = mysqli_query($conexion, "UPDATE detalle_venta SET estado = 1 WHERE id_detalle_venta = $id_detalle");
+    $msg = "llego1";
     // validacion
     if ($query) {
         $query2 = mysqli_query($conexion, "UPDATE ventas SET estado = 1 WHERE id = $id_venta");
-        // validacion
-        if ($query2) {
-            $stockActual = mysqli_query($conexion, "SELECT * FROM producto WHERE codproducto = $id_producto");
-            $stockNuevo = mysqli_fetch_assoc($stockActual);
-            $stockTotal = $stockNuevo['existencia'] + $cantidad;
-            $msg = "ok";
+        // trayendo stock actual
+        $msg = "llego";
+
+        $stockActual = mysqli_query($conexion, "SELECT * FROM lotes WHERE id_producto = $id_producto AND lote = '$lote'");
+        $stockNuevo = mysqli_num_rows($stockActual);
+        $stockNuevoArray = mysqli_fetch_assoc($stockActual);
+        if ($stockNuevo > 0) {
+            $stockTotal = ($stockNuevoArray['existencia'] + $cantidad);
+            $actualizarCantLote = mysqli_query($conexion, "UPDATE lotes SET existencia = $stockTotal WHERE id_producto = $id_producto AND lote = '$lote'");
         } else {
-            $msg = "Error";
+            $insertar = mysqli_query($conexion, "INSERT INTO lotes(id_producto, lote, vencimiento, existencia) VALUES ($id_producto, '$lote', '$vencimiento', $multiplicacion)");
+            $msg = "ok";
         }
     } else {
         $msg = "Error";
@@ -251,6 +259,7 @@ else if (isset($_GET['detalle'])) {
         while ($row = mysqli_fetch_assoc($consultaDetalle)) {
             $id_producto2 = $row['id_producto'];
             $lote = $row['lote'];
+            $vencimiento = $row['vencimiento'];
             $cantidad = $row['cantidad'];
             $cant_unidad = $row['cant_unidad'];
             $desc = $row['descuento'];
@@ -259,26 +268,26 @@ else if (isset($_GET['detalle'])) {
             // consultando producto seleccionado
             $multi = $cant_unidad *  $cantidad;
             // consulta lote con menor fecha de vencimiento
-            $consultLote = mysqli_query($conexion, "SELECT * FROM lotes WHERE lote = '$lote'");
+            $consultLote = mysqli_query($conexion, "SELECT * FROM lotes WHERE id_producto = $id_producto2 AND lote = '$lote'");
             $resultconsultLote = mysqli_fetch_assoc($consultLote);
             // 
             $multi = $cant_unidad *  $cantidad;
-            $stockTotal3 = $resultconsultLote['existencia'] - $multi;
+            // $stockTotal3 = $resultconsultLote['existencia'] - $multi;
             // restando existencia
             $existenciaLote = ($resultconsultLote['existencia'] - $multi);
             // si la existencia del lote esta en 0 se elimina si aun tiene unidades se actualiza
             if ($existenciaLote <= 0) {
-                $query_delete = mysqli_query($conexion, "DELETE FROM lotes WHERE lote = '$lote'");
+                $query_delete = mysqli_query($conexion, "DELETE FROM lotes WHERE id_producto = $id_producto2 AND lote = '$lote'");
             } else {
-                $actualizarLote = mysqli_query($conexion, "UPDATE lotes SET existencia = $existenciaLote WHERE lote = '$lote'");
+                $actualizarLote = mysqli_query($conexion, "UPDATE lotes SET existencia = $existenciaLote WHERE id_producto = $id_producto2 AND lote = '$lote'");
             }
             // insertandop detalle venta
-            $insertarDet = mysqli_query($conexion, "INSERT INTO detalle_venta (id_producto, id_venta, cantidad, cant_unidad, precio, descuento, total, estado, cierre_caja) VALUES ($id_producto2, $ultimoId, $cantidad, $cant_unidad, '$precio', '$desc', '$total', 0, 0)");
+            $insertarDet = mysqli_query($conexion, "INSERT INTO detalle_venta (id_producto, lote, vencimiento, id_venta, cantidad, cant_unidad, precio, descuento, total, estado, cierre_caja) VALUES ($id_producto2, '$lote', '$vencimiento', $ultimoId, $cantidad, $cant_unidad, '$precio', '$desc', '$total', 0, 0)");
             // validando que todo se halla insertado cone exito
             if ($insertarDet) {
                 // eliminando de la tabla temporal
                 $eliminar = mysqli_query($conexion, "DELETE FROM detalle_temp WHERE id_usuario = $id_user");
-                $msg = array('mensaje' => 'exitoso');
+                $msg = array('id_cliente' => $id_cliente, 'id_venta' => $ultimoId);
             }
         }
     } else {
@@ -405,17 +414,17 @@ else if (isset($_GET['detalle'])) {
     $precio_venta_compra2 = $_POST['precio_venta_compra'];
     // consulta 
     $consultaGuardarProducto = mysqli_query($conexion, "SELECT * FROM producto WHERE codigo = '$codigo2'");
-    $resultGuardarProducto = mysqli_fetch_row($consultaGuardarProducto);
+    $resultGuardarProducto = mysqli_num_rows($consultaGuardarProducto);
     // validando si el producto existe
-    if ($resultGuardarProducto > 1) {
+    if ($resultGuardarProducto > 0) {
         $insertarCierreCaja = mysqli_query($conexion, "UPDATE `producto` SET `codigo`='$codigo2',`codigo_hijo`='$codigo_hijo2',`descripcion`='$descripcion_compra2',`cant_menudeo`='$cant_menudeo2',`cant_blister`='$cant_blister2',`cant_global`='$cant_global2',`precio_menudeo`='$precio_menudeo2',`precio_blister`='$precio_blister2',`precio_global`='$precio_venta_compra2',`precio_compra`='$precio_compra_compra2',`iva`='$iva2',`invima`='$invima_compra2',`existencia_minima`='$existencia_minima_compra2',`id_lab`='$laboratorio_compra2',`id_tipo`='$tipo_compra2',`delete`= 0 WHERE  codigo = '$codigo2'");
         $msn = "producto actualizado correctamente";
         echo json_encode($msn);
         die();
     } else {
-        $insertarCierreCaja = mysqli_query($conexion, "INSERT INTO producto(`codproducto`, `codigo`, `codigo_hijo`, `descripcion`, `cant_menudeo`, `cant_blister`, `cant_global`, `precio_menudeo`, `precio_blister`, `precio_global`, `precio_compra`, `iva`, `invima`, `existencia_minima`, `id_lab`, `id_tipo`, `vencimiento`, `delete`) values (null,'$codigo2','', '$descripcion_compra2', '$cant_menudeo2', '$cant_blister2', '$cant_global2', '$precio_menudeo2', '$precio_blister2', '$precio_venta_compra2', '$precio_compra_compra2', $iva2,'$invima_compra2', '$existencia_minima_compra2', $laboratorio_compra2, $tipo_compra2,0)");
+        $insertarCierreCaja = mysqli_query($conexion, "INSERT INTO producto(`codigo`, `codigo_hijo`, `descripcion`, `cant_menudeo`, `cant_blister`, `cant_global`, `precio_menudeo`, `precio_blister`, `precio_global`, `precio_compra`, `iva`, `invima`, `existencia_minima`, `id_lab`, `id_tipo`, `delete`) values ('$codigo2','$codigo_hijo2', '$descripcion_compra2', '$cant_menudeo2', '$cant_blister2', '$cant_global2', '$precio_menudeo2', '$precio_blister2', '$precio_venta_compra2', '$precio_compra_compra2', $iva2,'$invima_compra2', '$existencia_minima_compra2', $laboratorio_compra2, $tipo_compra2,0)");
         $msn = "producto guardado correctamente";
-        echo json_encode($msn);
+        echo json_encode($msn); 
         die();
     }
 } else if (isset($_POST['procesarCompra'])) {
@@ -690,8 +699,10 @@ else if (isset($_GET['detalle'])) {
     } else {
         $consultaCantidadLote = mysqli_query($conexion, "SELECT * FROM lotes WHERE lote = '$loteSeleccionado' AND existencia >= $cant_por_cantipo");
         $resultConsultaCantidadLote = mysqli_num_rows($consultaCantidadLote);
+        $resultConsultaCantidadLoteArray = mysqli_fetch_assoc($consultaCantidadLote);
+        $vencimiento = $resultConsultaCantidadLoteArray['vencimiento'];
         if ($resultConsultaCantidadLote > 0) {
-            $query = mysqli_query($conexion, "INSERT INTO detalle_temp(id_usuario, id_producto, lote, cantidad,cant_unidad,tipo_venta,precio_venta, total) VALUES ($id_user, $id, '$loteSeleccionado', $cant, '$cant_unidad','$tipo_venta','$precio', '$total')");
+            $query = mysqli_query($conexion, "INSERT INTO detalle_temp(id_usuario, id_producto, lote, vencimiento,cantidad,cant_unidad,tipo_venta,precio_venta, total) VALUES ($id_user, $id, '$loteSeleccionado', '$vencimiento', $cant, '$cant_unidad','$tipo_venta','$precio', '$total')");
             if ($query) {
                 $msg = "registrado";
             } else {
@@ -907,3 +918,4 @@ else if (isset($_GET['detalle'])) {
     echo json_encode($msgF);
     die();
 }
+ 

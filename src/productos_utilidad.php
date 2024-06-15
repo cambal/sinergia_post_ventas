@@ -55,23 +55,21 @@ include_once "includes/header.php";
                                 // 
                                 $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
                                 $toV = $resultado / $row['cant_global'] * $existencia;
+
+                                $sub_array[] = '$' . number_format($toC);
+                                $sub_array[] = '$' . number_format($toV);
                             } else if ($row['precio_menudeo'] == 0 && $row['precio_blister'] > 0) {
                                 // BLISTER
-                                $resultado = $existencia / $row['cant_blister'] * $row['precio_blister'];
-                                // 
                                 $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
-                                $toV = $resultado / $row['cant_global'] * $existencia;
+                                $toV = $existencia / $row['cant_blister'] * $row['precio_blister'];
                             } else if ($row['precio_menudeo'] > 0 && $row['precio_blister'] > 0) {
-                                $resultado = $row['precio_menudeo'] * $existencia;
                                 // TODO
                                 $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
-                                $toV = $resultado / $row['cant_global'] * $existencia;
+                                $toV = $row['precio_menudeo'] * $existencia;
                             } else if ($row['precio_menudeo'] == 0 && $row['precio_blister'] == 0) {
                                 // SOLO TOTAL
-                                $resultado = $row['precio_global'] * $existencia;
-                                //
                                 $toC = $row['precio_compra'] * $existencia;
-                                $toV = $resultado * $existencia;
+                                $toV = $row['precio_global'] * $existencia;
                             }
                             $totalSumadoCompra += $toC;
                             $totalSumado += $toV;

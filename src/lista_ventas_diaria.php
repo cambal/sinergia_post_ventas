@@ -9,7 +9,7 @@ $existe = mysqli_fetch_all($sql);
 if (empty($existe) && $id_user != 1) {
     header('Location: permisos.php');
 }
-$query = mysqli_query($conexion, "SELECT v.id, v.metodo_pago, v.id_usuario, v.id_cliente, v.fecha, d.id_detalle_venta, d.id_producto, d.id_venta, d.cantidad, d.cant_unidad, d.descuento, d.precio, d.total, d.estado, p.descripcion FROM detalle_venta d INNER JOIN producto p ON d.id_producto = codproducto INNER JOIN ventas v WHERE d.id_venta = v.id AND v.fecha = '$hoy' AND d.estado = 0 AND d.cierre_caja = 0");
+$query = mysqli_query($conexion, "SELECT v.id, v.metodo_pago, v.id_usuario, v.id_cliente, v.fecha, d.id_detalle_venta, d.id_producto, d.id_venta, d.cantidad, d.cant_unidad, d.descuento, d.precio, d.total, d.estado, d.lote, p.descripcion, p.codproducto FROM detalle_venta d INNER JOIN producto p ON d.id_producto = p.codproducto INNER JOIN ventas v WHERE d.id_venta = v.id AND v.fecha = '$hoy' AND d.estado = 0 AND d.cierre_caja = 0");
 include_once "includes/header.php";
 ?>
 <div class="card">
@@ -23,6 +23,7 @@ include_once "includes/header.php";
                     <tr>
                         <th># factura</th>
                         <th># Producto</th>
+                        <th>Lote</th>
                         <th>Cantidad</th>
                         <th>valor unit</th>
                         <th>Total</th>
@@ -44,6 +45,7 @@ include_once "includes/header.php";
                             <tr>
                                 <td><?php echo $row['id']; ?></td>
                                 <td><?php echo substr($row['descripcion'], 0, 22); ?></td>
+                                <td><?php echo substr($row['lote'], 0, 22); ?></td>
                                 <td><?php echo number_format($row['cantidad']); ?></td>
                                 <td>$<?php echo number_format($row['precio']); ?></td>
                                 <td>$<?php echo number_format($row['precio'] * $row['cantidad']); ?></td>
@@ -70,6 +72,7 @@ include_once "includes/header.php";
                         <td></td>
                         <td>total</td>
                         <td>$ <?php echo number_format($totalSumado); ?></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
