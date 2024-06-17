@@ -3,7 +3,7 @@ include "conexion.php";
 
 $output = array();
 
-$sql = "SELECT * FROM producto p INNER JOIN laboratorios l ON p.id_lab = l.id WHERE `delete` = 0";
+$sql = "SELECT *, SUM(l.existencia) AS existencia FROM lotes l INNER JOIN producto p ON l.id_producto = p.codproducto GROUP BY p.codigo, p.descripcion, l.lote";
 
 $totalQuery = mysqli_query($con, $sql);
 $total_all_rows = mysqli_num_rows($totalQuery);
@@ -12,7 +12,6 @@ if (isset($_POST['search']['value'])) {
     $search_value = $_POST['search']['value'];
     $sql .= " AND p.codigo LIKE '%" . $search_value . "%'";
     $sql .= " OR p.descripcion LIKE '%" . $search_value . "%'";
-    $sql .= " AND p.delete = 0";
 }
 if (isset($_POST['order'])) {
     $column_name = $_POST['order'][0]['column'];
@@ -34,19 +33,20 @@ $data = array();
 
 while ($row = mysqli_fetch_assoc($query)) {
     $id_prod = $row['codproducto'];
-    $stock = mysqli_query($con, "SELECT SUM(existencia) AS existencia FROM lotes WHERE id_producto = $id_prod");
-    $resultadoStock = mysqli_fetch_assoc($stock);
+    $id_lab = $row['id_lab'];
     $existencia = 0;
+    $laboratorio = mysqli_query($con, "SELECT * FROM laboratorios WHERE id = $id_lab");
+    $assocLab = mysqli_fetch_assoc($laboratorio);
 
-    if (!empty($resultadoStock['existencia'])) {
-        $existencia = $resultadoStock['existencia'];
+    if (!empty($row['existencia'])) {
+        $existencia = $row['existencia'];
     }
 
     $sub_array = array();
     $sub_array[] = $row['codigo'];
     $sub_array[] = $row['descripcion'];
-    $sub_array[] = $row['laboratorio'];
-    $sub_array[] = $existencia;
+    $sub_array[] = $assocLab['laboratorio'];
+    $sub_array[] = $row['existencia'];
 
     if ($row['precio_menudeo'] > 0 && $row['precio_blister'] == 0) {
         // MENUDEO

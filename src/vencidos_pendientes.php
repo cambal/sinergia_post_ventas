@@ -37,7 +37,7 @@ include_once "includes/header.php";
                         <?php
                         include "../conexion.php";
                         $hoy = date('Y-m-d');
-                        $query = mysqli_query($conexion, "SELECT * FROM lotes l INNER JOIN producto p ON l.id_producto = p.codproducto");
+                        $query = mysqli_query($conexion, "SELECT * FROM lotes l INNER JOIN producto p ON l.id_producto = p.codproducto WHERE l.vencimiento < CURDATE() ORDER BY id DESC");
                         while ($data = mysqli_fetch_assoc($query)) {
                         ?>
                             <tr>

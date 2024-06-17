@@ -11,7 +11,7 @@ if (empty($existe) && $id_user != 1) {
 
 $hoy = date('Y-m-d');
 
-$query = mysqli_query($conexion, "SELECT * FROM producto p INNER JOIN laboratorios l ON p.id_lab = l.id WHERE `delete` = 0");
+$query = mysqli_query($conexion, "SELECT *, SUM(l.existencia) AS existencia FROM lotes l INNER JOIN producto p ON l.id_producto = p.codproducto GROUP BY p.codigo, p.descripcion, l.lote");
 
 
 include_once "includes/header.php";
@@ -41,39 +41,35 @@ include_once "includes/header.php";
                     $totalSumadoCompra = 0;
                     $totalSumado = 0;
                     while ($row = mysqli_fetch_assoc($query)) {
-                        $id_prod = $row['codproducto'];
-                        $stock = mysqli_query($conexion, "SELECT SUM(existencia) AS existencia FROM lotes WHERE id_producto = $id_prod");
-                        $resultadoStock = mysqli_fetch_assoc($stock);
                         $existencia = 0;
-                        if (!empty($resultadoStock['existencia'])) {
-                            $existencia = $resultadoStock['existencia'];
-                        }
-                        if ($existencia != 0) {
-                            if ($row['precio_menudeo'] > 0 && $row['precio_blister'] == 0) {
-                                // MENUDEO
-                                $resultado = $row['precio_menudeo'] * $existencia;
-                                // 
-                                $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
-                                $toV = $resultado / $row['cant_global'] * $existencia;
 
-                                $sub_array[] = '$' . number_format($toC);
-                                $sub_array[] = '$' . number_format($toV);
-                            } else if ($row['precio_menudeo'] == 0 && $row['precio_blister'] > 0) {
-                                // BLISTER
-                                $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
-                                $toV = $existencia / $row['cant_blister'] * $row['precio_blister'];
-                            } else if ($row['precio_menudeo'] > 0 && $row['precio_blister'] > 0) {
-                                // TODO
-                                $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
-                                $toV = $row['precio_menudeo'] * $existencia;
-                            } else if ($row['precio_menudeo'] == 0 && $row['precio_blister'] == 0) {
-                                // SOLO TOTAL
-                                $toC = $row['precio_compra'] * $existencia;
-                                $toV = $row['precio_global'] * $existencia;
-                            }
-                            $totalSumadoCompra += $toC;
-                            $totalSumado += $toV;
+                        if (!empty($row['existencia'])) {
+                            $existencia = $row['existencia'];
                         }
+                        if ($row['precio_menudeo'] > 0 && $row['precio_blister'] == 0) {
+                            // MENUDEO
+                            $resultado = $row['precio_menudeo'] * $existencia;
+                            // 
+                            $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
+                            $toV = $resultado / $row['cant_global'] * $existencia;
+
+                            $sub_array[] = '$' . number_format($toC);
+                            $sub_array[] = '$' . number_format($toV);
+                        } else if ($row['precio_menudeo'] == 0 && $row['precio_blister'] > 0) {
+                            // BLISTER
+                            $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
+                            $toV = $existencia / $row['cant_blister'] * $row['precio_blister'];
+                        } else if ($row['precio_menudeo'] > 0 && $row['precio_blister'] > 0) {
+                            // TODO
+                            $toC = $row['precio_compra'] / $row['cant_global'] * $existencia;
+                            $toV = $row['precio_menudeo'] * $existencia;
+                        } else if ($row['precio_menudeo'] == 0 && $row['precio_blister'] == 0) {
+                            // SOLO TOTAL
+                            $toC = $row['precio_compra'] * $existencia;
+                            $toV = $row['precio_global'] * $existencia;
+                        }
+                        $totalSumadoCompra += $toC;
+                        $totalSumado += $toV;
                     }
                     ?>
                 </tbody>

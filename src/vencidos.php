@@ -5,7 +5,6 @@ session_start();
 include_once "includes/header.php";
 ?>
 
-
 <!-- Content Row -->
 <div class="row">
     <div class="card">
@@ -15,7 +14,7 @@ include_once "includes/header.php";
         <div class="card-body">
             <a id="download_xlsx" class="btn btn-success text-white">Exportar a excel</a>
             <div class="table-responsive">
-                <table class="table table-danger table-hover" id="tbl">
+                <table class="table table-danger table-hover" id="tbl_vencidos">
                     <thead class="thead-dark">
                         <tr>
                             <th>Cod Barras</th>
@@ -27,28 +26,7 @@ include_once "includes/header.php";
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        $query = mysqli_query($conexion, "SELECT * FROM vencidos v INNER JOIN producto p ON v.id_producto = p.codproducto ORDER BY fecha ASC");
-                        // AND p.vencimiento < '$hoy+90'
-                        $result = mysqli_num_rows($query);
-                        if ($result > 0) {
-                            while ($data = mysqli_fetch_assoc($query)) {
-
-                        ?>
-                                <tr>
-                                    <td><?php echo $data['codigo']; ?></td>
-                                    <td><?php echo $data['descripcion']; ?></td>
-                                    <td><?php echo $data['lote']; ?></td>
-                                    <td><?php echo $data['cantidad']; ?></td>
-                                    <td><?php echo $data['vencimiento']; ?></td>
-                                    <td><?php echo $data['fecha']; ?></td>
-                                </tr>
-                        <?php
-
-                            }
-                        } ?>
                     </tbody>
-
                 </table>
             </div>
         </div>
@@ -56,3 +34,34 @@ include_once "includes/header.php";
 </div>
 
 <?php include_once "includes/footer.php"; ?>
+
+<script>
+    $(document).ready(function() {
+        $('#tbl_vencidos').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [
+                [1000, 500, 100, 50, 25, 10, 5],
+                [1000, 500, 100, 50, 25, 10, 5]
+            ],
+            "processing": true,
+            "serverSide": true,
+            "paging": true,
+            "order": [],
+
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
+            },
+            "fnCreatedRow": function(nRow, aData, iDataIndex) {
+                $(nRow).attr('id', aData[0]);
+            },
+            'ajax': {
+                'url': 'datatable_vencidos.php',
+                'type': 'post',
+            },
+            "columnDefs": [{
+                'target': [5],
+                'orderable': true,
+            }]
+        });
+    });
+</script>
