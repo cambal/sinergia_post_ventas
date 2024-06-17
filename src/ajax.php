@@ -402,7 +402,7 @@ else if (isset($_GET['detalle'])) {
     } else {
         $insertarCierreCaja = mysqli_query($conexion, "INSERT INTO producto(`codigo`, `codigo_hijo`, `descripcion`, `cant_menudeo`, `cant_blister`, `cant_global`, `precio_menudeo`, `precio_blister`, `precio_global`, `precio_compra`, `iva`, `invima`, `existencia_minima`, `id_lab`, `id_tipo`, `delete`) values ('$codigo2','$codigo_hijo2', '$descripcion_compra2', '$cant_menudeo2', '$cant_blister2', '$cant_global2', '$precio_menudeo2', '$precio_blister2', '$precio_venta_compra2', '$precio_compra_compra2', $iva2,'$invima_compra2', '$existencia_minima_compra2', $laboratorio_compra2, $tipo_compra2,0)");
         $msn = "producto guardado correctamente";
-        echo json_encode($msn);
+        echo json_encode($msn); 
         die();
     }
 } else if (isset($_POST['procesarCompra'])) {
@@ -678,7 +678,10 @@ else if (isset($_GET['detalle'])) {
         $consultaCantidadLote = mysqli_query($conexion, "SELECT * FROM lotes WHERE lote = '$loteSeleccionado' AND existencia >= $cant_por_cantipo");
         $resultConsultaCantidadLote = mysqli_num_rows($consultaCantidadLote);
         $resultConsultaCantidadLoteArray = mysqli_fetch_assoc($consultaCantidadLote);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 895b97baf3db6036e761cb584e920e1c4b259d22
         if ($resultConsultaCantidadLote > 0) {
             $vencimiento = $resultConsultaCantidadLoteArray['vencimiento'];
             $query = mysqli_query($conexion, "INSERT INTO detalle_temp(id_usuario, id_producto, lote, vencimiento,cantidad,cant_unidad,tipo_venta,precio_venta, total) VALUES ($id_user, $id, '$loteSeleccionado', '$vencimiento', $cant, '$cant_unidad','$tipo_venta','$precio', '$total')");
@@ -897,3 +900,4 @@ else if (isset($_GET['detalle'])) {
     echo json_encode($msgF);
     die();
 }
+ 

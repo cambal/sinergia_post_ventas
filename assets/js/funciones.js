@@ -1,8 +1,6 @@
 $(document).ready(function () {
     $('#preload').fadeOut(1000);
-    if (document.getElementById("detalle_compra")) {
-        calcularCompra();
-    }
+    listarCompra();
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -775,7 +773,7 @@ Metodo de pago:
         listar();
     }
     if (document.getElementById("detalle_compra")) {
-        calcularCompra();
+        listarCompra();
     }
     if (document.querySelector("#download_xlsx")) {
         let download_xlsx = document.querySelector("#download_xlsx")
