@@ -1,7 +1,8 @@
 $(document).ready(function () {
     $('#preload').fadeOut(1000);
-    // listarCompra();
-    calcularCompra();
+    if (document.getElementById("detalle_compra")) {
+        calcularCompra();
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -583,7 +584,6 @@ Metodo de pago:
                     setTimeout(() => {
                         generarPDF(res.id_cliente, res.id_venta);
                         location.reload();
-                        // listarCompra();
                     }, 300);
                 } else {
                     Swal.fire({
@@ -775,7 +775,6 @@ Metodo de pago:
         listar();
     }
     if (document.getElementById("detalle_compra")) {
-        // listarCompra();
         calcularCompra();
     }
     if (document.querySelector("#download_xlsx")) {
@@ -1795,70 +1794,6 @@ function listar() {
             document.querySelector("#detalle_venta").innerHTML = html;
             calcular();
         }
-    });
-}
-function listarCompra() {
-    let html = '';
-    let detalle = 'detalleCompra';
-    $.ajax({
-        url: "ajax.php",
-        dataType: "json",
-        data: {
-            detalleCompra: detalle
-        },
-        success: function (response) {
-
-            let count = 0;
-            response.forEach(row => {
-                let pre_menudeo = row['precio_menudeo_c'];
-                let pre_blister = row['precio_blister_c'];
-                const resSubTotal = row['sub_total'];
-                count = count + 1;
-                html += `<form id="form1"><tr>
-                <td>${row['codigo']}</td>
-                <td>${row['descripcion']}</td>
-                <td>
-                <input class="form-control nuevo_lote${count}" placeholder="Desc" type="text" value="${row['lote_compra']}" name="nuevo_lote" id="nuevo_lote" disabled>
-                </td>
-                <td>
-                <input class="form-control nuevo_vencimiento${count}" placeholder="Desc" type="date" value="${row['vencimiento']}" id="nuevo_vencimiento"disabled>
-                </td>
-                <td>
-                <input class="form-control nuevo_precio_menudeo${count}" placeholder="Desc" type="text" value="${formatterPeso.format(row['precio_menudeo_c'])}" id="nuevo_precio_menudeo"disabled>
-                </td>
-                <td>
-                <input class="form-control nuevo_precio_blister${count}" placeholder="Desc" type="text" value="${formatterPeso.format(row['precio_blister_c'])}" id="nuevo_precio_blister"disabled>
-                </td>
-                <td>
-                <input class="form-control nuevo_precio_compra${count}" placeholder="Desc" type="text" value="${formatterPeso.format(row['precio_c'])}" id="nuevo_precio_compra"disabled>
-                </td>
-                <td>
-                <input class="form-control nuevo_precio_venta${count}" placeholder="Desc" type="text" value="${formatterPeso.format(row['precio_venta'])}" id="nuevo_precio_venta"disabled>
-                </td>
-                <td>
-                <input class="form-control nueva_cantidad${count}" placeholder="Desc" type="number" value="${row['cantidad']}" id="nueva_cantidad">        
-                <button class="btn btn-info p-2 update" type="button" onclick="actualizarCantidad(${row['id']}, ${count})">
-                <i class="fas fa-redo-alt"></i>
-                </button>
-                </td>
-                <td class='d-none'>${resSubTotal}</td>
-                <td>
-                <input class="form-control nuevo_total${count} separadorMiles" placeholder="Desc" type="text" value="${formatterPeso.format(resSubTotal)}" id="nuevo_total">
-                <button class="btn btn-info p-2 update" type="button" onclick="actualizarTotal(${row['id']}, ${count})">
-                <i class="fas fa-redo-alt"></i>
-                </button>
-                </td>
-                <td>
-                      <button class="btn btn-danger" type="button" onclick="deleteDetalleCompra(${row['id']})">
-                <i class="fas fa-trash-alt"></i></button></td>
-                </tr></form>`;
-            });
-            document.querySelector("#detalle_compra").innerHTML = html;
-            calcularCompra();
-
-        }
-    }).fail(function (e) {
-        console.log('Error!!' + JSON.stringify(e));
     });
 }
 function actualizarCantidadVenta(id, count) {

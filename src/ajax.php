@@ -149,28 +149,6 @@ else if (isset($_GET['detalle'])) {
     // return array
     echo json_encode($datos);
     die();
-} else if (isset($_GET['detalleCompra'])) {
-    $id = $_SESSION['idUser'];
-    $datos = array();
-    $detalle = mysqli_query($conexion, "SELECT d.*, p.codproducto, p.descripcion, p.codigo, p.cant_global FROM detalle_temp_compra d INNER JOIN producto p ON d.id_producto = p.codproducto WHERE d.id_usuario = $id");
-    while ($row = mysqli_fetch_assoc($detalle)) {
-        $data['id'] = $row['id'];
-        $data['codigo'] = $row['codigo'];
-        $data['descripcion'] = $row['descripcion'];
-        $data['cantidad'] = $row['cantidad'];
-        $data['cant_unit'] = $row['cant_unit'];
-        $data['precio_c'] = $row['precio_c'];
-        $data['precio_venta'] = $row['precio_venta'];
-        $data['sub_total'] = $row['total'];
-        $data['vencimiento'] = $row['vencimiento_compra'];
-        $data['lote_compra'] = $row['lote_compra'];
-        $data['cant_global'] = $row['cant_global'];
-        $data['precio_menudeo_c'] = $row['precio_menudeo_c'];
-        $data['precio_blister_c'] = $row['precio_blister_c'];
-        array_push($datos, $data);
-    }
-    echo json_encode($datos);
-    die();
 } else if (isset($_GET['delete_detalle'])) {
     $id_detalle = $_GET['id'];
     $query = mysqli_query($conexion, "DELETE FROM detalle_temp WHERE id = $id_detalle");
