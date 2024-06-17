@@ -288,15 +288,15 @@ include_once "includes/header.php";
                     <th>Venci</th>
                     <th>$ Menudeo</th>
                     <th>$ Blister</th>
-                    <th>$ C Global</th>
-                    <th>$ V global</th>
+                    <th>$ Compra Global</th>
+                    <th>$ Venta Global</th>
                     <th>Cant</th>
+                    <th>$ Total</th>
                     <th>$ Total</th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="detalle_compra">
-                <!-- <tbody id="detalle_compra"> -->
+            <tbody>
 
             </tbody>
             <tfoot>
@@ -310,6 +310,7 @@ include_once "includes/header.php";
                     <td></td>
                     <td></td>
                     <td>Total</td>
+                    <td><input type="text" id="total_pagar" style="color: #fff; font-weight: bold; background: #212529; border:none;" disabled></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -319,10 +320,15 @@ include_once "includes/header.php";
     </div>
 </div>
 <?php include_once "includes/footer.php"; ?>
-<!-- <script>
+
+<script>
     $(document).ready(function() {
-        $('#tbl_compras').DataTable({
+        let table = $('#tblDetalleCompra').DataTable({
             "pageLength": 5,
+            "lengthMenu": [
+                [1000, 500, 100, 50, 25, 10, 5],
+                [1000, 500, 100, 50, 25, 10, 5]
+            ],
             "processing": true,
             "serverSide": true,
             "paging": true,
@@ -332,10 +338,29 @@ include_once "includes/header.php";
                 "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
             },
             "fnCreatedRow": function(nRow, aData, iDataIndex) {
+                var total = 0;
+                $('#tblDetalleCompra').DataTable().rows().data().each(function(el, index) {
+                    console.log(el[9].split("<br>")[0]);
+                    total += el[10];
+                });
+                // 1
+                let division = total.split(",");
+                let suma = division.reduce((a, b) => a + b, 0);
+                // 2
+                let division2 = suma.split("$");
+                let suma2 = division2.reduce((a, b) => parseInt(a + b), 0);
+                let arreglo = [];
+                for (let index = 0; index < division2.length; index++) {
+                    const element = division2[index];
+                    arreglo.push(parseInt(element));
+                }
+                // 3
+                let suma3 = arreglo.reduce((a, b) => parseInt(a + b), 0);
+                $("#total_pagar").val(formatterPeso.format(suma3));
                 $(nRow).attr('id', aData[0]);
             },
             'ajax': {
-                'url': 'datatable_compras.php',
+                'url': 'datatable_detalle_compra.php',
                 'type': 'post',
             },
             "columnDefs": [{
@@ -344,4 +369,4 @@ include_once "includes/header.php";
             }]
         });
     });
-</script> -->
+</script>

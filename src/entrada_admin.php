@@ -178,36 +178,18 @@ include_once "includes/header.php";
             </div>
             <div class="table-responsive p-0">
                 <!-- table -->
-                <table class="table table-hover align-items-center mb-0" id="tbl">
+                <table class="table table-hover align-items-center mb-0" id="tbl_entrada">
                     <thead>
                         <tr>
                             <th>Cod Barras</th>
                             <th>Producto</th>
                             <th>Cantidad</th>
-                            <th>Cantidad unit</th>
+                            <!-- <th>Cantidad unit</th> -->
                             <th>Usuario</th>
                             <th>Fecha</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        include "../conexion.php";
-                        $query = mysqli_query($conexion, "SELECT * FROM entrada_admin s INNER JOIN producto p ON s.id_producto = p.codproducto INNER JOIN usuario u ON s.id_usuario = u.idusuario ORDER BY s.fecha DESC");
-                        $result = mysqli_num_rows($query);
-                        while ($data = mysqli_fetch_assoc($query)) {
-                            // $divCompra = $data['precio_compra'];
-                            // $divGanancia = $data['precio_global'] - $divCompra;
-                        ?>
-                            <tr>
-                                <td><?php echo $data['codigo']; ?></td>
-                                <td><?php echo substr($data['descripcion'], 0, 30); ?></td>
-                                <td><?php echo substr($data['cantidad'], 0, 23); ?></td>
-                                <td><?php echo substr($data['cant_unit'], 0, 23); ?></td>
-                                <td><?php echo substr($data['nombre'], 0, 23); ?></td>
-                                <td><?php echo substr($data['fecha'], 0, 23); ?></td>
-                            </tr>
-                        <?php
-                        } ?>
                     </tbody>
                 </table>
             </div>
@@ -215,3 +197,34 @@ include_once "includes/header.php";
     </div>
 </div>
 <?php include_once "includes/footer.php"; ?>
+
+<script>
+    $(document).ready(function() {
+        $('#tbl_entrada').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [
+                [500, 100, 50, 25, 10, 5],
+                [500, 100, 50, 25, 10, 5]
+            ],
+            "processing": true,
+            "serverSide": true,
+            "paging": true,
+            "order": [],
+
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
+            },
+            "fnCreatedRow": function(nRow, aData, iDataIndex) {
+                $(nRow).attr('id', aData[0]);
+            },
+            'ajax': {
+                'url': 'datatable_entrada_admin.php',
+                'type': 'post',
+            },
+            "columnDefs": [{
+                'target': [5],
+                'orderable': true,
+            }]
+        });
+    });
+</script>

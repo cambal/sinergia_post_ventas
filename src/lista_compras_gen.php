@@ -18,7 +18,7 @@ include_once "includes/header.php";
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover" id="tbl">
+            <table class="table table-hover" id="tbl_historial_compra">
                 <thead class="thead-dark">
                     <tr>
                         <th># Factura</th>
@@ -36,19 +36,6 @@ include_once "includes/header.php";
                     while ($row = mysqli_fetch_assoc($query)) {
                         $totalSumado += $row['total'];
                     ?>
-                        <tr>
-                            <td><?php echo $row['num_fac_compra']; ?></td>
-                            <td><?php echo $row['proveedor']; ?></td>
-                            <td><?php echo $row['nombre']; ?></td>
-                            <td>$<?php echo number_format($row['total']); ?></td>
-                            <td><?php echo $row['fecha']; ?></td>
-                            <td>
-                                <a href="pdf/generar_compra.php?cl=<?php echo $row['id_cliente'] ?>&v=<?php echo $row['id'] ?>" target="_blank" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>
-                            </td>
-                            <td>
-                                <a href="pdf/generar_recepcion_tecnica.php?cl=<?php echo $row['id_cliente'] ?>&v=<?php echo $row['id'] ?>" target="_blank" class="btn btn-info"><i class="fas fa-file-pdf"></i></a>
-                            </td>
-                        </tr>
                     <?php } ?>
                 </tbody>
                 <tfoot>
@@ -56,8 +43,7 @@ include_once "includes/header.php";
                         <td></td>
                         <td></td>
                         <td>total</td>
-                        <td>$<?php echo number_format($totalSumado); ?></td>
-                        
+                        <td>$<?php echo number_format($totalSumado); ?></td>                        
                         <td></td>
                         <td></td>
                         <td></td>
@@ -68,3 +54,34 @@ include_once "includes/header.php";
     </div>
 </div>
 <?php include_once "includes/footer.php"; ?>
+
+<script>
+    $(document).ready(function() {
+        $('#tbl_historial_compra').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [
+                [1000, 500, 100, 50, 25, 10, 5],
+                [1000, 500, 100, 50, 25, 10, 5]
+            ],
+            "processing": true,
+            "serverSide": true,
+            "paging": true,
+            "order": [],
+
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
+            },
+            "fnCreatedRow": function(nRow, aData, iDataIndex) {
+                $(nRow).attr('id', aData[0]);
+            },
+            'ajax': {
+                'url': 'datatable_historial_compra.php',
+                'type': 'post',
+            },
+            "columnDefs": [{
+                'target': [5],
+                'orderable': true,
+            }]
+        });
+    });
+</script>

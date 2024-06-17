@@ -46,7 +46,7 @@ include_once "includes/header.php";
     $(document).ready(function() {
         $('#tbl_sugerido').DataTable({
             "pageLength": 5,
-            "lengthMenu": [[1000, 500, 100, 50, 25], [1000, 500, 100, 50, 25]],
+            "lengthMenu": [[1000, 500, 100, 50, 25, 10, 5], [1000, 500, 100, 50, 25, 10, 5]],
             "processing": true,
             "serverSide": true,
             "paging": true,

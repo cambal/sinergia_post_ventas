@@ -258,7 +258,7 @@ include_once "includes/header.php";
                         <div class="form-group">
                           <label for="cantidad" class="d-flex text-dark font-weight-bold">Cant stock actual <span class="text-danger">(*)</span>
                           </label>
-                          <input type="number" placeholder="Ingrese cantidad" class="form-control" name="cantidad" id="cantidad" disabled>
+                          <input type="number" class="form-control" name="cantidad" id="cantidad" disabled>
                         </div>
                         <!--  -->
                         <!-- <div class="form-group">
@@ -278,7 +278,7 @@ include_once "includes/header.php";
                   </div>
                   <div class="modal-footer">
                     <div class="form-group pr-5">
-                      <input type="button" value="Limpiar" onclick="limpiar()" class="btn btn-info" id="btnNuevo">
+                      <input type="button" value="Limpiar" onclick="limpiar();$('#menudeo_venta').prop('checked', true);" class="btn btn-info" id="btnNuevo">
                       <input type="button" onclick="guardarProductoBtn()" value="Registrar" class="btn btn-primary" id="btnAccion">
                     </div>
                   </div>
@@ -289,7 +289,12 @@ include_once "includes/header.php";
           <div class="card-body px-0 pt-0 pb-2">
             <div class="row px-5 justify-content-end mb-4">
               <div class="col-md-3 d-flex  justify-content-end">
-                <button data-toggle="modal" data-target="#exampleModal" onclick="limpiar()" class="btn btn-primary" id="openModal">Agregar nuevo</button>
+                <button data-toggle="modal" data-target="#exampleModal" onclick="limpiar(); $('#precio_menudeo').prop('disabled', true);
+                $('#cant_menudeo').prop('disabled', true);
+                $('#precio_blister').prop('disabled', true);
+                $('#cant_blister').prop('disabled', true);" class="btn btn-primary" id="openModal">
+                  Agregar nuevo
+                </button>
               </div>
             </div>
             <div class="table-responsive p-0">
