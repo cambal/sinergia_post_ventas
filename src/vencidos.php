@@ -20,8 +20,10 @@ include_once "includes/header.php";
                         <tr>
                             <th>Cod Barras</th>
                             <th>Producto</th>
-                            <!-- <th>Lote</th> -->
+                            <th>Lote</th>
+                            <th>Cantidad</th>
                             <th>Vencimiento</th>
+                            <th>Eliminación</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +38,9 @@ include_once "includes/header.php";
                                 <tr>
                                     <td><?php echo $data['codigo']; ?></td>
                                     <td><?php echo $data['descripcion']; ?></td>
+                                    <td><?php echo $data['lote']; ?></td>
+                                    <td><?php echo $data['cantidad']; ?></td>
+                                    <td><?php echo $data['vencimiento']; ?></td>
                                     <td><?php echo $data['fecha']; ?></td>
                                 </tr>
                         <?php

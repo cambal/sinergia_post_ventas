@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $('#preload').fadeOut(1000);
-    listarCompra();
+    calcularCompra();
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1146,7 +1146,7 @@ function calculaPorcentajesBlister() {
     // guardamos el valor en el input
     document.getElementById("precio_blister").value = sum;
 }
-function guardarProducto() {
+function guardarProducto() { 
     // e.preventDefault();
     const codigo = $('#codigo_compra').val();
     const codigo_hijo_compra = $('#codigo_hijo_compra').val();

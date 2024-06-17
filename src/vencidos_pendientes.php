@@ -38,19 +38,15 @@ include_once "includes/header.php";
                         include "../conexion.php";
                         $hoy = date('Y-m-d');
                         $query = mysqli_query($conexion, "SELECT * FROM lotes l INNER JOIN producto p ON l.id_producto = p.codproducto");
-                        // $result = mysqli_num_rows($query);
                         while ($data = mysqli_fetch_assoc($query)) {
-                            $dividir = $data['vencimiento'];
-                            $lote = $data['lote'];
-                            if ($dividir <= $hoy) {
                         ?>
                             <tr>
                                 <td><?php echo $data['codigo']; ?></td>
                                 <td><?php echo $data['descripcion']; ?></td>
                                 <td><?php echo $data['lote']; ?></td>
-                                <td><?php echo $dividir; ?></td>
+                                <td><?php echo $data['vencimiento']; ?></td>
                                 <td>
-                                    <form action="eliminar_fecha_vencida.php?id=<?php echo $data['codproducto']; ?>" method="post" class="d-inline">
+                                    <form action="eliminar_fecha_vencida.php?id_producto=<?php echo $data['codproducto']; ?>&lote=<?php echo $data['lote']; ?>" method="post" class="d-inline">
                                         <button class="btn btn-danger" type="submit">
                                             <i class='fas fa-trash-alt'></i>
                                         </button>
@@ -58,7 +54,6 @@ include_once "includes/header.php";
                                 </td>
                             </tr>
                         <?php
-                            }
                         }
                         ?>
                     </tbody>

@@ -678,10 +678,6 @@ else if (isset($_GET['detalle'])) {
         $consultaCantidadLote = mysqli_query($conexion, "SELECT * FROM lotes WHERE lote = '$loteSeleccionado' AND existencia >= $cant_por_cantipo");
         $resultConsultaCantidadLote = mysqli_num_rows($consultaCantidadLote);
         $resultConsultaCantidadLoteArray = mysqli_fetch_assoc($consultaCantidadLote);
-<<<<<<< HEAD
-
-=======
->>>>>>> 895b97baf3db6036e761cb584e920e1c4b259d22
         if ($resultConsultaCantidadLote > 0) {
             $vencimiento = $resultConsultaCantidadLoteArray['vencimiento'];
             $query = mysqli_query($conexion, "INSERT INTO detalle_temp(id_usuario, id_producto, lote, vencimiento,cantidad,cant_unidad,tipo_venta,precio_venta, total) VALUES ($id_user, $id, '$loteSeleccionado', '$vencimiento', $cant, '$cant_unidad','$tipo_venta','$precio', '$total')");
